@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
-import  express  from "express";
-import api from "./routes/api"
+const express = require("express");
+const home = require("./routes/api");
 
 
 dotenv.config();
