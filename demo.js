@@ -1,24 +1,56 @@
-import { OpenAI } from "langchain";
-import {PromptTemplate} from "langchain";
-import {LLMChain} from "langchain";
-
 import * as dotenv from "dotenv";
 dotenv.config();
+import  express  from "express";
+const app = express();
+import cors from "cors";
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 
 
-const template = "Who are you {question}"
-const promptTemplate = new PromptTemplate({
-    template:template,
-    inputVariables:["question"]
-})
+// import { OpenAI } from "langchain";
+import {ConversationChain} from "langchain/chains";
+// import {PromptTemplate} from "langchain";
+// import {LLMChain} from "langchain";
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { BufferMemory } from "langchain/memory"; 
+import { HumanMessage, } from "langchain/schema";
 
 
-const model = new OpenAI({
-    
-    temparature:0.9
-})
+app.get("/",async function(req,res){
 
-const res = await model.call("Who are you")
+    res.status(200).json("responce")
 
-console.log(res)
+
+});
+
+
+
+
+app.post("/api/chat",async function(req,res){
+    const { prompt } = req.body;
+
+    const model = new ChatOpenAI({
+        temperature:0,
+        modelName:"gpt-3.5-turbo-0613",
+    })
+    const memory =new BufferMemory(
+        
+    )
+    const chain = new ConversationChain({
+        llm:model,
+        memory:memory
+    })
+    const responce = await chain.call({input : new HumanMessage(prompt)})
+    res.status(200).json(responce)
+
+
+});
+
+
+app.listen(9000, () => {
+    console.log( "server running ....");
+  });
