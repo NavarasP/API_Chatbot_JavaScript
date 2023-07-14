@@ -1,2 +1,2 @@
-# Python Chatbot API🦜🔗
+# JavaScript Chatbot API🦜🔗
 
